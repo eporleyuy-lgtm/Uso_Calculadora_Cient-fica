@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practica con la calculadora científica</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#1c2630;--mute:#5d6b7a;--line:#d3dae1;--acc:#e8a317;--ok:#1f8a53;--bad:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121920;--panel:#1b2530;--ink:#e8edf2;--mute:#9aa8b6;--line:#33414f;--ok:#4cc386;--bad:#f2837c}}
+:root[data-theme="dark"]{--bg:#121920;--panel:#1b2530;--ink:#e8edf2;--mute:#9aa8b6;--line:#33414f;--ok:#4cc386;--bad:#f2837c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,"Segoe UI",sans-serif}
+main{max-width:520px;margin:0 auto;padding:14px 14px 40px}
+h1{font-size:1.3rem;margin:6px 0 2px}.sub{color:var(--mute);margin:0 0 12px;font-size:.95rem}
+h2{font-size:1.05rem;margin:0 0 6px}p{margin:6px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+.calc{background:#232c36;border-radius:16px;padding:12px;margin-bottom:12px}
+.scr{background:#dfe8d8;color:#14202b;border-radius:8px;padding:8px 10px;min-height:96px;font-family:ui-monospace,Menlo,Consolas,monospace;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.ex{font-size:1.05rem;word-break:break-all;min-height:1.6em}.rs{font-size:1.45rem;text-align:right;font-weight:700;min-height:1.6em}
+.fm{display:flex;gap:6px;align-items:center;margin:10px 0;color:#c9d3dd;font-size:.85rem;flex-wrap:wrap}
+.fm button{border:1px solid #5d6b7a;background:transparent;color:#e8edf2;border-radius:14px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+.fm button.on{background:var(--acc);color:#1c2630;border-color:var(--acc)}
+.kp{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.kp button{height:46px;border:0;border-radius:8px;font:inherit;font-size:1.05rem;font-weight:700;cursor:pointer}
+.n{background:#e8edf2;color:#14202b}.o{background:var(--acc);color:#1c2630}.f{background:#46515f;color:#fff}.d{background:#b3503f;color:#fff}.eq{background:#1f8a53;color:#fff;grid-column:span 4}
+button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.chips{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}
+.chips button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);font:inherit;cursor:pointer}
+.chips button.on{background:var(--ink);color:var(--bg)}.chips button.ok{border-color:var(--ok)}.chips button.ok::after{content:"✓";font-size:.7rem;color:var(--ok);position:relative;top:-8px;left:2px}
+.b{border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:8px;font:inherit;cursor:pointer;margin:3px 4px 3px 0}
+.fb{margin-top:8px;padding:8px 10px;border-radius:8px;border-left:4px solid var(--line);min-height:1.5em}
+.fb.ok{border-color:var(--ok)}.fb.bad{border-color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+summary{cursor:pointer;font-weight:700}
+</style></head>
+<body><main>
+<h1>Practica con la calculadora científica</h1>
+<p class="sub">Aprende las teclas que usarás en la ley de Coulomb: paréntesis, x², EXP y Ans.</p>
+<div class="calc">
+ <div class="scr" role="status" aria-live="polite"><div class="ex" id="ex">&nbsp;</div><div class="rs" id="rs"></div></div>
+ <div class="fm">Formato del resultado:<button id="m_norm" class="on">Normal</button><button id="m_sci">Científica</button><button id="m_s2">2 c.s.</button><button id="m_s3">3 c.s.</button></div>
+ <div class="kp" id="kp"></div>
+</div>
+<div class="card" id="ret"></div>
+<div class="card"><details><summary>Guía de teclas</summary>
+<table><tr><td><b>x²</b></td><td>Eleva al cuadrado el número anterior.</td></tr>
+<tr><td><b>EXP</b></td><td>Escribe «×10 elevado a». Ej.: 8,99 EXP 9 = 8,99×10⁹.</td></tr>
+<tr><td><b>(−)</b></td><td>Signo menos de un número negativo, por ejemplo en un exponente.</td></tr>
+<tr><td><b>Ans</b></td><td>Usa el resultado anterior.</td></tr>
+<tr><td><b>( )</b></td><td>Agrupan operaciones que se hacen primero.</td></tr></table>
+<p class="sub">En la app HiPER (según la captura): x² es la tecla □², (−) es +/−, EXP es EXP y = es ✓. Revisa la ubicación en tu calculadora, porque puede variar.</p></details></div>
+</main>
+<script>
+let ex='',ans=0,fresh=false,mode='norm',cur=0,done=[],shown=false;
+const $=id=>document.getElementById(id);
+const KP=[['x²','^2','f'],['xʸ','^','f'],['√','√(','f'],['π','π','f'],['Ans','Ans','f'],
+['(','(','f'],[')',')','f'],['(−)','−','f'],['DEL','DEL','d'],['AC','AC','d'],
+['7','7','n'],['8','8','n'],['9','9','n'],['×','×','o'],['÷','÷','o'],
+['4','4','n'],['5','5','n'],['6','6','n'],['+','+','o'],['−','−','o'],
+['1','1','n'],['2','2','n'],['3','3','n'],['.','.','n'],['EXP','E','f'],
+['0','0','n'],['=','=','eq']];
+$('kp').innerHTML=KP.map(([l,k,c])=>`<button class="${c}" data-k="${k}" aria-label="${l}">${l}</button>`).join('');
+$('kp').onclick=e=>{const k=e.target.closest('button')?.dataset.k;if(k)key(k)};
+['norm','sci','s2','s3'].forEach(m=>$('m_'+m).onclick=()=>{mode=m;['norm','sci','s2','s3'].forEach(x=>$('m_'+x).className=x==m?'on':'');if(shown)$('rs').innerHTML=fmt(ans)});
+function draw(){$('ex').innerHTML=(ex.replace(/E([−+-]?\d*)/g,(m,x)=>'×10<sup>'+(x||'□')+'</sup>').replace(/\^2(?!\d)/g,'²').replace(/\./g,',')||'&nbsp;')}
+function key(k){
+ if(k=='AC'){ex='';fresh=false;shown=false;$('rs').innerHTML='';draw();return}
+ if(k=='='){calc();return}
+ if(fresh){fresh=false;shown=false;$('rs').innerHTML='';if(k!='DEL')ex=('+−×÷^'.includes(k)||k=='^2')?'Ans':''}
+ if(k=='DEL'){ex=ex.endsWith('Ans')?ex.slice(0,-3):ex.endsWith('√(')?ex.slice(0,-2):ex.slice(0,-1)}else ex+=k;
+ draw()}
+function ev(s){let i=0;const sw=t=>s.startsWith(t,i);
+ function add(){let v=mul();for(;;){if(sw('+')){i++;v+=mul()}else if(sw('−')){i++;v-=mul()}else return v}}
+ function mul(){let v=un();for(;;){if(sw('×')){i++;v*=un()}else if(sw('÷')){i++;v/=un()}else if(sw('(')||sw('π')||sw('√')||sw('Ans'))v*=un();else return v}}
+ function un(){if(sw('−')){i++;return -un()}if(sw('+')){i++;return un()}return pw()}
+ function pw(){const b=pr();if(sw('^')){i++;return Math.pow(b,un())}return b}
+ function pr(){if(sw('(')){i++;const v=add();if(sw(')'))i++;return v}if(sw('π')){i++;return Math.PI}if(sw('Ans')){i+=3;return ans}if(sw('√')){i++;return Math.sqrt(pr())}
+  const m=/^(\d+\.?\d*|\.\d+)(E[+−-]?\d+)?/.exec(s.slice(i));if(!m)throw 1;i+=m[0].length;return parseFloat(m[0].replace('E','e').replace('−','-'))}
+ const v=add();if(i<s.length)throw 1;return v}
+const SUP={'-':'⁻','−':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'},sup=s=>[...s].map(c=>SUP[c]||c).join('');
+function sci(v,k,t){let[m,e]=v.toExponential(k-1).split('e');if(t&&m.includes('.'))m=m.replace(/0+$/,'').replace(/\.$/,'');return m.replace('.',',')+'×10'+sup(String(+e))}
+function fmt(v){if(!isFinite(v))return'Error matemático';if(v==0)return'0';const a=Math.abs(v);
+ if(mode=='sci')return sci(v,10,1);
+ if(mode=='norm')return a>=1e10||a<1e-4?sci(v,10,1):String(+v.toPrecision(10)).replace('.',',');
+ const k=mode=='s2'?2:3,s=v.toPrecision(k);return s.includes('e')||a<1e-3||a>=1e4?sci(v,k):s.replace('.',',')}
+function calc(){let v;try{v=ev(ex)}catch(e){$('rs').textContent='Error de sintaxis';fb('bad','Hay un error en la expresión. Borra con DEL y revisa paréntesis y operaciones.');return}
+ ans=v;fresh=true;shown=true;$('rs').innerHTML=fmt(v);check(v)}
+const rel=(a,b,t=1e-3)=>Math.abs(a-b)<=Math.abs(b)*t;
+const EX=[
+{t:'Orden de las operaciones',p:'Calcula <b>12 + 8 × 3</b>. Antes de pulsar =, predice: ¿36 o 60?',ok:(e,v)=>v==36||'Escribe 12 + 8 × 3 tal cual.',hint:'Pulsa 1, 2, +, 8, ×, 3 y =.',win:'36. La calculadora multiplica antes de sumar.'},
+{t:'Paréntesis',p:'Haz que la suma se realice primero: calcula <b>(12 + 8) × 3</b>.',ok:(e,v)=>(v==60&&e.includes('('))||'Usa los paréntesis ( ) para agrupar 12 + 8.',hint:'Pulsa ( 12 + 8 ) × 3 =.',win:'60. Lo que va entre paréntesis se calcula primero.'},
+{t:'La tecla x²',p:'Calcula <b>0,50 al cuadrado</b> usando la tecla x².',ok:(e,v)=>(e.includes('^2')&&rel(v,.25))||'Escribe 0,50 y pulsa x²: debe aparecer ².',hint:'0 . 5 0 x² =',win:'0,25. Usarás x² para la distancia r² en la ley de Coulomb.'},
+{t:'La tecla EXP',p:'Ingresa <b>8,99×10⁹</b> (el valor de k) con la tecla EXP. No escribas × ni 10. Luego prueba el formato Científica.',ok:(e,v)=>(e.includes('E')&&!e.includes('×')&&rel(v,8.99e9,1e-9))||'Escribe 8,99, pulsa EXP y luego 9.',hint:'8 . 9 9 EXP 9 =',win:'EXP ya incluye «×10 elevado a». Probaste que el resultado cambia de formato.'},
+{t:'Exponente negativo',p:'Ingresa <b>4,0×10⁻⁶</b> (4,0 μC expresado en coulombs) con EXP y la tecla (−).',ok:(e,v)=>(e.includes('E')&&rel(v,4e-6,1e-9))||'El signo menos va después de EXP: 4,0 EXP (−) 6.',hint:'4 . 0 EXP (−) 6 =',win:'1 μC = 10⁻⁶ C, por eso 4,0 μC = 4,0×10⁻⁶ C.'},
+{t:'Ley de Coulomb completa',p:'Calcula <b>F = k·q₁·q₂ / r²</b> con k = 8,99×10⁹, q₁ = q₂ = 4,0 μC (en coulombs) y r = 0,50 m. Hazlo en una sola línea.',ok:(e,v)=>{if(rel(v,.57536))return true;if(rel(v,.28768))return'Parece que dividiste por r y no por r². Usa x² con la distancia.';if(rel(v,.14384))return'Cuidado con ÷0,50 × 0,50: divide y luego multiplica. Usa 0,50 y x².';return'Revisa los exponentes, el signo (−) y que divides por r².'},hint:'8.99 EXP 9 × 4.0 EXP (−) 6 × 4.0 EXP (−) 6 ÷ 0.50 x²',win:'F = 0,57536 N. Es el mismo valor de la Actividad 3 del simulador de Coulomb.'},
+{t:'Cifras significativas',p:'Informa el resultado anterior con dos cifras: elige <b>2 c.s.</b> en Formato, pulsa <b>Ans</b> y luego =.',ok:(e,v)=>(mode=='s2'&&rel(v,.57536))||'Elige 2 c.s. y pulsa Ans =. El resultado anterior debe ser 0,57536.',hint:'Formato 2 c.s., luego Ans =',win:'0,58 N. El 5 de la tercera cifra obliga a redondear hacia arriba.'},
+{t:'Usar Ans',p:'Calcula la fuerza si la distancia se duplica, usando Ans: <b>Ans ÷ 2²</b>.',ok:(e,v)=>(e.includes('Ans')&&rel(v,.14384))||'Escribe Ans ÷ 2 x² =. Al duplicar r, F se divide por 4.',hint:'Ans ÷ 2 x² =',win:'Con 2 c.s. ves 0,14 N: F se redujo a la cuarta parte.'}];
+function check(v){const r=EX[cur].ok(ex,v);if(r===true){done[cur]=1;fb('ok','✔ '+EX[cur].win);chips()}else fb('bad',r||EX[cur].hint)}
+function fb(c,t){const f=$('fb');if(f){f.className='fb '+c;f.textContent=t}}
+function show(n){cur=Math.max(0,Math.min(EX.length-1,n));const e=EX[cur];
+ $('ret').innerHTML=`<h2>Reto ${cur+1} de ${EX.length}: ${e.t}</h2><p>${e.p}</p><div class="chips" id="ch"></div><button class="b" onclick="fb('',EX[cur].hint)">Ver pista</button><button class="b" onclick="show(cur-1)">←</button><button class="b" onclick="show(cur+1)">→</button><div class="fb" id="fb" aria-live="polite">Escribe en la calculadora y pulsa =</div>`;chips()}
+function chips(){$('ch').innerHTML=EX.map((_,i)=>`<button class="${i==cur?'on':''} ${done[i]?'ok':''}" onclick="show(${i})">${i+1}</button>`).join('')}
+show(0);draw();
+</script></body></html>
